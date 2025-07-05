@@ -36,10 +36,10 @@ function autoBind(instance: unknown): void {
   }
 
   Object.getOwnPropertyNames(proto).forEach((key) => {
-    // Pastikan properti bukan constructor dan tipe adalah function
+ 
     const prop = (instance as Record<string, unknown>)[key];
     if (key !== "constructor" && typeof prop === "function") {
-      // Hanya lakukan bind jika prop adalah fungsi
+  
       (prop as Function).bind(instance);
     }
   });

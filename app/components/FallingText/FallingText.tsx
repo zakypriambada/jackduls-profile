@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import Matter from 'matter-js';
 import './FallingText.css';
@@ -29,7 +29,6 @@ const FallingText: React.FC<FallingTextProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLDivElement | null>(null);
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
-
   const [effectStarted, setEffectStarted] = useState(false);
 
   useEffect(() => {
@@ -49,6 +48,7 @@ const FallingText: React.FC<FallingTextProps> = ({
       setEffectStarted(true);
       return;
     }
+
     if (trigger === 'scroll' && containerRef.current) {
       const observer = new IntersectionObserver(
         ([entry]) => {
@@ -68,7 +68,6 @@ const FallingText: React.FC<FallingTextProps> = ({
     if (!effectStarted || !containerRef.current || !canvasContainerRef.current || !textRef.current) return;
 
     const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } = Matter;
-
     const containerRect = containerRef.current.getBoundingClientRect();
     const width = containerRect.width;
     const height = containerRect.height;
@@ -89,16 +88,14 @@ const FallingText: React.FC<FallingTextProps> = ({
       },
     });
 
-    const boundaryOptions = {
-      isStatic: true,
-      render: { fillStyle: 'transparent' },
-    };
-
+    // Creating the world boundaries
+    const boundaryOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
     const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
     const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
     const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
+    // Creating word bodies
     const wordSpans = textRef.current.querySelectorAll<HTMLSpanElement>('.word');
     const wordBodies = Array.from(wordSpans).map((elem) => {
       const rect = elem.getBoundingClientRect();
@@ -124,16 +121,15 @@ const FallingText: React.FC<FallingTextProps> = ({
       elem.style.transform = 'none';
     });
 
+    // Adding mouse interaction
     const mouse = Mouse.create(containerRef.current);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
-      constraint: {
-        stiffness: mouseConstraintStiffness,
-        render: { visible: false },
-      },
+      constraint: { stiffness: mouseConstraintStiffness, render: { visible: false } },
     });
     render.mouse = mouse;
 
+    // Adding everything to the world
     World.add(engine.world, [
       floor,
       leftWall,
