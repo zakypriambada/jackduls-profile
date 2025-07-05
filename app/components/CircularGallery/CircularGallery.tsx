@@ -29,12 +29,22 @@ function lerp(p1: number, p2: number, t: number): number {
 
 function autoBind(instance: unknown): void {
   const proto = Object.getPrototypeOf(instance);
+
+  // Pastikan instance adalah objek dan bukan null
+  if (typeof instance !== 'object' || instance === null) {
+    throw new Error("Provided instance is not an object");
+  }
+
   Object.getOwnPropertyNames(proto).forEach((key) => {
-    if (key !== "constructor" && typeof (instance as Record<string, unknown>)[key] === "function") {
-      (instance as Record<string, unknown>)[key] = (instance as Record<string, any>)[key].bind(instance);
+    // Pastikan properti bukan constructor dan tipe adalah function
+    const prop = (instance as Record<string, unknown>)[key];
+    if (key !== "constructor" && typeof prop === "function") {
+      // Hanya lakukan bind jika prop adalah fungsi
+      (prop as Function).bind(instance);
     }
   });
 }
+
 
 
 function getFontSize(font: string): number {
