@@ -10,7 +10,6 @@ const handleAnimationComplete = () => {
 };
 
 export default function Contact() {
-    const hoverIntensity = 0.15;
     return (
         <div >
             <Navbar />
