@@ -10,7 +10,7 @@ export default function Home() {
     <div>
       <Navbar />
       <div className="flex justify-center items-center h-screen bg-black animate-fadeIn ">
-        <CircularGallery bend={3} textColor="black" borderRadius={0.10} />
+        <CircularGallery bend={3} textColor="white" borderRadius={0.10} />
       </div>
       <div className="flex flex-col justify-center items-center pt-6 pb-20 text-black px-4 md:px-0">
         <h1 className="text-[40px] font-extrabold text-center">JACKDULS</h1>
