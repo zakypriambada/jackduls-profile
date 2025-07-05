@@ -31,6 +31,7 @@ const FallingText: React.FC<FallingTextProps> = ({
   const canvasContainerRef = useRef<HTMLDivElement | null>(null);
   const [effectStarted, setEffectStarted] = useState(false);
 
+  // Update innerHTML with highlighted words
   useEffect(() => {
     if (!textRef.current) return;
     const words = text.split(' ');
@@ -43,6 +44,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     textRef.current.innerHTML = newHTML;
   }, [text, highlightWords, highlightClass]);
 
+  // Trigger effect on specific events
   useEffect(() => {
     if (trigger === 'auto') {
       setEffectStarted(true);
@@ -64,6 +66,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     }
   }, [trigger]);
 
+  // Matter.js effect initialization and update
   useEffect(() => {
     if (!effectStarted || !containerRef.current || !canvasContainerRef.current || !textRef.current) return;
 
@@ -88,14 +91,14 @@ const FallingText: React.FC<FallingTextProps> = ({
       },
     });
 
-    // Creating the world boundaries
+    // World boundaries
     const boundaryOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
     const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
     const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
     const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height, boundaryOptions);
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
-    // Creating word bodies
+    // Word bodies
     const wordSpans = textRef.current.querySelectorAll<HTMLSpanElement>('.word');
     const wordBodies = Array.from(wordSpans).map((elem) => {
       const rect = elem.getBoundingClientRect();
@@ -114,6 +117,7 @@ const FallingText: React.FC<FallingTextProps> = ({
       return { elem, body };
     });
 
+    // Update word positions in the DOM
     wordBodies.forEach(({ elem, body }) => {
       elem.style.position = 'absolute';
       elem.style.left = `${body.position.x - body.bounds.max.x + body.bounds.min.x / 2}px`;
@@ -121,7 +125,7 @@ const FallingText: React.FC<FallingTextProps> = ({
       elem.style.transform = 'none';
     });
 
-    // Adding mouse interaction
+    // Mouse interaction
     const mouse = Mouse.create(containerRef.current);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -143,6 +147,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     Runner.run(runner, engine);
     Render.run(render);
 
+    // Update loop
     const updateLoop = () => {
       wordBodies.forEach(({ body, elem }) => {
         const { x, y } = body.position;

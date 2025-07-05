@@ -83,8 +83,7 @@ export default function Contact() {
                     </form>
                 </div>
             </div>
-
-            {/* Falling Text */}
+            
             <FallingText
                 text={`Nyaman menarik praktis elegan simpel efisien memukau keren berkelas memadai hebat menyenangkan berkualitas menarik menawan fungsional stylish modern elegan bersih luar biasa memadai istimewa mempesona keren inovatif trendy berkelas luar biasa dinamis hebat penuh warna sempurna terpercaya luar biasa memikat menarik.`}
                 highlightWords={["elegan", "menarik", "menawan", "simpel", "efisien", "memukau", "keren", "trendy"]}
