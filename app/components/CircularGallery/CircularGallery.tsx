@@ -30,7 +30,7 @@ function lerp(p1: number, p2: number, t: number): number {
 function autoBind(instance: unknown): void {
   const proto = Object.getPrototypeOf(instance);
 
-  // Pastikan instance adalah objek dan bukan null
+ 
   if (typeof instance !== 'object' || instance === null) {
     throw new Error("Provided instance is not an object");
   }
@@ -40,7 +40,7 @@ function autoBind(instance: unknown): void {
     const prop = (instance as Record<string, unknown>)[key];
     if (key !== "constructor" && typeof prop === "function") {
   
-      (prop as Function).bind(instance);
+      (prop as (...args: unknown[]) => unknown).bind(instance);
     }
   });
 }
