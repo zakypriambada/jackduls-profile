@@ -66,12 +66,16 @@ const FallingText: React.FC<FallingTextProps> = ({
     }
   }, [trigger]);
 
-  // Matter.js effect initialization and update
+  // Matter.js effect
   useEffect(() => {
-    if (!effectStarted || !containerRef.current || !canvasContainerRef.current || !textRef.current) return;
+    const container = containerRef.current;
+    const canvasContainer = canvasContainerRef.current;
+    const textContainer = textRef.current;
 
-    const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } = Matter;
-    const containerRect = containerRef.current.getBoundingClientRect();
+    if (!effectStarted || !container || !canvasContainer || !textContainer) return;
+
+    const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint, Body } = Matter;
+    const containerRect = container.getBoundingClientRect();
     const width = containerRect.width;
     const height = containerRect.height;
 
@@ -81,7 +85,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     engine.world.gravity.y = gravity;
 
     const render = Render.create({
-      element: canvasContainerRef.current,
+      element: canvasContainer,
       engine,
       options: {
         width,
@@ -91,7 +95,7 @@ const FallingText: React.FC<FallingTextProps> = ({
       },
     });
 
-    // World boundaries
+    // Boundaries
     const boundaryOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
     const floor = Bodies.rectangle(width / 2, height + 25, width, 50, boundaryOptions);
     const leftWall = Bodies.rectangle(-25, height / 2, 50, height, boundaryOptions);
@@ -99,7 +103,7 @@ const FallingText: React.FC<FallingTextProps> = ({
     const ceiling = Bodies.rectangle(width / 2, -25, width, 50, boundaryOptions);
 
     // Word bodies
-    const wordSpans = textRef.current.querySelectorAll<HTMLSpanElement>('.word');
+    const wordSpans = textContainer.querySelectorAll<HTMLSpanElement>('.word');
     const wordBodies = Array.from(wordSpans).map((elem) => {
       const rect = elem.getBoundingClientRect();
       const x = rect.left - containerRect.left + rect.width / 2;
@@ -112,12 +116,13 @@ const FallingText: React.FC<FallingTextProps> = ({
         friction: 0.2,
       });
 
-      Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 5, y: 0 });
-      Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+      Body.setVelocity(body, { x: (Math.random() - 0.5) * 5, y: 0 });
+      Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+
       return { elem, body };
     });
 
-    // Update word positions in the DOM
+    // Position DOM elements
     wordBodies.forEach(({ elem, body }) => {
       elem.style.position = 'absolute';
       elem.style.left = `${body.position.x - body.bounds.max.x + body.bounds.min.x / 2}px`;
@@ -125,15 +130,15 @@ const FallingText: React.FC<FallingTextProps> = ({
       elem.style.transform = 'none';
     });
 
-    // Mouse interaction
-    const mouse = Mouse.create(containerRef.current);
+    // Mouse control
+    const mouse = Mouse.create(container);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: { stiffness: mouseConstraintStiffness, render: { visible: false } },
     });
     render.mouse = mouse;
 
-    // Adding everything to the world
+    // Add to world
     World.add(engine.world, [
       floor,
       leftWall,
@@ -147,7 +152,6 @@ const FallingText: React.FC<FallingTextProps> = ({
     Runner.run(runner, engine);
     Render.run(render);
 
-    // Update loop
     const updateLoop = () => {
       wordBodies.forEach(({ body, elem }) => {
         const { x, y } = body.position;
@@ -155,23 +159,25 @@ const FallingText: React.FC<FallingTextProps> = ({
         elem.style.top = `${y}px`;
         elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
       });
-      Matter.Engine.update(engine);
+      Engine.update(engine);
       requestAnimationFrame(updateLoop);
     };
 
     updateLoop();
 
+    // Cleanup
     return () => {
       Render.stop(render);
       Runner.stop(runner);
-      if (render.canvas && canvasContainerRef.current) {
-        canvasContainerRef.current.removeChild(render.canvas);
+      if (render.canvas && canvasContainer) {
+        canvasContainer.removeChild(render.canvas);
       }
       World.clear(engine.world, false);
       Engine.clear(engine);
     };
   }, [effectStarted, gravity, wireframes, backgroundColor, mouseConstraintStiffness]);
 
+  // Event trigger (click/hover)
   const handleTrigger = () => {
     if (!effectStarted && (trigger === 'click' || trigger === 'hover')) {
       setEffectStarted(true);
@@ -193,7 +199,7 @@ const FallingText: React.FC<FallingTextProps> = ({
         ref={textRef}
         className='falling-text-target'
         style={{
-          fontSize: fontSize,
+          fontSize,
           lineHeight: 1.4,
         }}
       />
