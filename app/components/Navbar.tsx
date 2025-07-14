@@ -53,11 +53,11 @@ export default function Navbar() {
                         <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-black transition-all transform -translate-x-1/2 group-hover:w-full group-hover:h-0.5"></span>
                     </li>
                 </ul>
-                <div className="hidden md:block pr-4">
+                <div className="hidden md:block pr-4 ">
                     <Link href="https://wa.me/6285940487295 ">
                         <StarBorder
                             as="button"
-                            className="px-4 py-2 rounded-full"
+                            className="px-4 py-2 rounded-full cursor-pointer"
                             color="red"
                             speed="2s"
                         >
