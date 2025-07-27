@@ -182,7 +182,7 @@ export default function Collection() {
                     </div>
                     <div className="max-w-[300px] pt-[40px]">
                         <TiltedCard
-                            imageSrc="/assets/comingsoon.svg"
+                            imageSrc="/assets/c7.png"
                             altText="Comingsoon"
                             captionText="Comingsoon"
                             containerHeight="250px"
@@ -196,12 +196,14 @@ export default function Collection() {
                             displayOverlayContent={true}
                             overlayContent={
                                 <p className="tilted-card-demo-text font-bold text-center">
-
+                                    Tshirt Sustenance Friends
                                 </p>
                             }
                         />
                         <div className="pt-5">
-                            <p className="font-bold text-center">ComingSoon</p>
+                            <p className="font-bold text-[#ff0000]">Rp.130.000</p>
+                            <p><span className="font-bold">Bahan: </span> Cotton Combed 24s</p>
+                            <p><span className="font-bold">Tersedia ukuran: </span>S / M / L / XL</p>
                         </div>
                     </div>
                     <div className="max-w-[300px] pt-[40px]">
